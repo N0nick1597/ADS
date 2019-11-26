@@ -1,0 +1,255 @@
+#include <iostream>
+#include <fstream>
+#include <stdlib.h>
+using namespace std;
+int const ArraySize = 100;
+int const ArraySize2 = 200;
+class Stack {
+	private:
+		int A[ArraySize], B[ArraySize2], size, NewElement, YesOrNo, MeniuPasirinkimas;
+		char FileName[50];
+		bool PrasipleteStackas;
+	public:
+		void KonsolesNuskaitymas() {
+			system("CLS");
+			PrasipleteStackas = false;
+			cout << "Kiek elementu noresite ivesti?" << endl;
+			cin >> size;
+			if (size <= ArraySize) {
+				for (int i = 0; i < size; i++) {
+					cout << "Iveskite skaiciu: ";
+					cin >> A[i];
+				}
+			}
+			else if (size > ArraySize && size <= ArraySize2) {
+				PrasipleteStackas = true;
+				for (int i = 0; i < size; i++) {
+					cout << "Iveskite skaiciu: ";
+					cin >> B[i];
+				}
+			}
+			else if (size > ArraySize2) {
+				cout << "Stackas per mazas jusu ivestam elementu kiekiui!!!" << endl;
+				system("pause");
+				KonsolesNuskaitymas();
+			}
+			meniu();
+		}
+		void FailoNuskaitymas() {
+			system("CLS");
+			PrasipleteStackas = false;
+			cout << "Iveskite failo pavadinima: " << endl;
+			cout << "Jusu failo pavadinimas: ";
+			cin >> FileName;
+			ifstream fd(FileName);
+			fd >> size;
+			for (int i = 0; i < size; i++) {
+				fd >> A[i];
+			}
+			fd.close();
+			meniu();
+		}
+		void PridetiElementa() {
+			system("CLS");
+			if (PrasipleteStackas == false) {
+				if (size + 1 > ArraySize) {
+					cout << "Stackas pilnas! Jei norite praplesti stacka ir testi - spauskite 1, jei norite baigti darba - spauskite 2" << endl;
+					cout << "Jusu pasirinkimas: ";
+					cin >> YesOrNo;
+					if (YesOrNo == 1) {
+						StackoPadidinimas();
+					}
+					else if (YesOrNo == 0) {
+						end();
+					}
+				}
+				cout << "Irasykite koki elementa noretumete ivesti i stacka: " << endl;
+				cout << "Jusu pasirinkimas: ";
+				cin >> NewElement;
+				A[size] = NewElement;
+				size++;
+			}
+			if (PrasipleteStackas == true) {
+				if (size + 1 > ArraySize2) {
+					cout << "Stackas pilnas, nera daugiau vietos...";
+					system("pause");
+					end();
+				}
+				cout << "Irasykite koki elementa noretumete ivesti i stacka: " << endl;
+				cout << "Jusu pasirinkimas: ";
+				cin >> NewElement;
+				B[size] = NewElement;
+				size++;
+			}
+			StackoIsvedimas();
+		}
+		void PasalintiElementa() {
+			system("CLS");
+			if (PrasipleteStackas == false) {
+				A[size] = 0;
+				size--;
+			}
+			else if (PrasipleteStackas == true) {
+				B[size] = 0;
+				size--;
+			}
+			StackoIsvedimas();
+		}
+		void PerziuretiPaskutini() {
+			system("CLS");
+			if (PrasipleteStackas == false) {
+				cout << A[size - 1];
+			}
+			else if (PrasipleteStackas == true) {
+				cout << B[size - 1];
+			}
+		}
+		void TusciasArPilnas() {
+			system("CLS");
+			if (PrasipleteStackas == false) {
+				if (size == ArraySize) {
+					cout << "Stackas pilnas!" << endl;
+				}
+				else if (size == 0) {
+					cout << "Stackas tuscias" << endl;
+				}
+				else {
+					cout << "Stackas turi elementu, bet jis nera perpildytas" << endl;
+				}
+			}
+			else if (PrasipleteStackas == true) {
+				if (size == ArraySize2) {
+					cout << "Stackas pilnas!" << endl;
+				}
+				else if (size == 0) {
+					cout << "Stackas tuscias" << endl;
+				}
+				else {
+					cout << "Stackas turi elementu, bet jis nera perpildytas" << endl;
+				}
+			}
+		}
+		int end() {
+			return 0;
+		}
+		void StackoPadidinimas() {
+			system("CLS");
+			for (int i = 0; i <= size; i++) {
+				B[i] = A[i];
+			}
+			PrasipleteStackas = true;
+			PridetiElementa();
+		}
+		void StackoDydis() {
+			system("CLS");
+			cout << "Stacka sudaro " << size << " elementai" << endl;
+		}
+		void StackoIsvedimas() {
+			cout << "Taip atrodo jusu stackas:" << endl;
+			if (PrasipleteStackas == false) {
+				for (int i = 0; i < size; i++) {
+					cout << A[i] << " ";
+				}
+			}
+			else if (PrasipleteStackas == true) {
+				for (int i = 0; i < size; i++) {
+					cout << B[i] << " ";
+				}
+			}
+			cout << endl;
+		}
+		void FailoIsvedimas() {
+			ofstream fr("Rezultatas.txt");
+			if (PrasipleteStackas == false) {
+				for (int i = 0; i < size; i++) {
+					fr << A[i] << " ";
+				}
+			}
+			else if (PrasipleteStackas == true) {
+				for (int i = 0; i < size; i++) {
+					fr << B[i] << " ";
+				}
+			}
+			cout << "Jusu duomenys perkelti i faila..." << endl;
+			fr.close();
+		}
+		void FailasArKonsole() {
+			int OrOr;
+			cout << "Kur norite isvesti savo duomenis? I faila - 1, I Konsole - 2" << endl;
+			cout << "Jusu pasirinkimas: ";
+			cin >> OrOr;
+			if (OrOr == 1) {
+				FailoIsvedimas();
+			}
+			else if (OrOr == 2) {
+				StackoIsvedimas();
+			}
+		}
+		void meniu() {
+			system("CLS");
+			cout << "Pasirinkite veiksmą kuri norite vykdyti pasirinkdami numeriuka..." << endl;
+			cout << "Prideti nauja elementa - 1" << endl;
+			cout << "Pasalinti nauja elementa - 2" << endl;
+			cout << "Perziureti paskutini elementa - 3" << endl;
+			cout << "Paziureti ar stackas tuscias\pilnas - 4" << endl;
+			cout << "Nustatyti stacko dydi - 5" << endl;
+			cout << "Perskaityti stacka - 6" << endl;
+			cout << "Iseiti is programos - 7" << endl;
+			cout << "Jusu pasirinkimas: ";
+			cin >> MeniuPasirinkimas;
+			switch (MeniuPasirinkimas){
+			case 1:
+				PridetiElementa();
+				system("pause");
+				meniu();
+				break;
+			case 2:
+				PasalintiElementa();
+				system("pause");
+				meniu();
+				break;
+			case 3:
+				PerziuretiPaskutini();
+				system("pause");
+				meniu();
+				break;
+			case 4:
+				TusciasArPilnas();
+				system("pause");
+				meniu();
+				break;
+			case 5:
+				StackoDydis();
+				system("pause");
+				meniu();
+				break;
+			case 6:
+				system("CLS");
+				FailasArKonsole();
+				system("pause");
+				meniu();
+				break;
+			case 7:
+				end();
+				break;
+			default:
+				cout << "Nera tokio pasirinkimo..." << endl;
+				system("pause");
+				meniu();
+			}
+		}
+};
+int main() {
+	Stack S;
+	int pasirinkimas;
+	cout << "Kaip noretumete nuskaityti duomenis? Jei is failo - spauskite 1, jei is konsoles - spauskite 2" << endl;
+	cout << "Jusu pasirinkimas: ";
+	cin >> pasirinkimas;
+	if (pasirinkimas == 1) {
+		S.FailoNuskaitymas();
+	}
+	else if (pasirinkimas == 2) {
+		S.KonsolesNuskaitymas();
+	}
+	return 0;
+}
